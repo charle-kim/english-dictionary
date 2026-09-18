@@ -96,29 +96,21 @@ class MainActivity : AppCompatActivity() {
     private fun renderResult(result: LookupResult) {
         when (result) {
             is LookupResult.Success -> {
-                currentWord = result.entry.word
+                currentWord = result.word
                 binding.resultCard.visibility = View.VISIBLE
                 binding.textError.visibility = View.GONE
 
-                binding.textWord.text = result.entry.word ?: ""
-                binding.textPhonetic.text = result.entry.phonetic
-                    ?: result.entry.phonetics?.firstOrNull { !it.text.isNullOrBlank() }?.text
-                    ?: ""
+                binding.textWord.text = result.word
+                binding.textPhonetic.text = result.phonetic ?: ""
 
-                val meaning = result.entry.meanings?.firstOrNull()
-                val definition = meaning?.definitions?.firstOrNull()
-
-                binding.textPartOfSpeech.text = meaning?.partOfSpeech?.let {
+                binding.textPartOfSpeech.text = result.partOfSpeech?.let {
                     getString(R.string.label_part_of_speech, it)
                 } ?: ""
 
-                binding.textDefinitionEn.text = definition?.definition?.let {
-                    getString(R.string.label_definition_en, it)
-                } ?: ""
-
+                binding.textDefinitionEn.text = getString(R.string.label_definition_en, result.definitionEn)
                 binding.textDefinitionKo.text = getString(R.string.label_definition_ko, result.koreanMeaning)
 
-                val example = definition?.example
+                val example = result.example
                 if (example.isNullOrBlank()) {
                     binding.textExample.visibility = View.GONE
                 } else {

@@ -13,8 +13,8 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = DictionaryRepository()
     private val db = AppDatabase.getInstance(application)
+    private val repository = DictionaryRepository(db.cacheDao())
 
     private val _result = MutableLiveData<LookupResult>()
     val result: LiveData<LookupResult> = _result
@@ -32,7 +32,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             val res = repository.lookup(word)
             _result.value = res
             if (res is LookupResult.Success) {
-                _isFavorite.value = db.favoriteDao().isFavorite(res.entry.word ?: word)
+                _isFavorite.value = db.favoriteDao().isFavorite(res.word)
             }
             _loading.value = false
         }
@@ -41,25 +41,22 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun toggleFavorite() {
         val current = _result.value
         if (current is LookupResult.Success) {
-            val word = current.entry.word ?: return
             viewModelScope.launch {
                 if (_isFavorite.value == true) {
                     db.favoriteDao().delete(
                         FavoriteWord(
-                            word = word,
+                            word = current.word,
                             meaningKo = current.koreanMeaning,
-                            meaningEn = current.entry.meanings?.firstOrNull()
-                                ?.definitions?.firstOrNull()?.definition ?: ""
+                            meaningEn = current.definitionEn
                         )
                     )
                     _isFavorite.value = false
                 } else {
                     db.favoriteDao().insert(
                         FavoriteWord(
-                            word = word,
+                            word = current.word,
                             meaningKo = current.koreanMeaning,
-                            meaningEn = current.entry.meanings?.firstOrNull()
-                                ?.definitions?.firstOrNull()?.definition ?: ""
+                            meaningEn = current.definitionEn
                         )
                     )
                     _isFavorite.value = true
