@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">영어사전</string>
+
+    <string name="hint_search">영어 단어를 입력하세요</string>
+    <string name="action_search">검색</string>
+    <string name="action_speak">🔊 발음 듣기</string>
+    <string name="action_add_favorite">☆ 즐겨찾기 추가</string>
+    <string name="action_remove_favorite">★ 즐겨찾기 삭제</string>
+    <string name="action_favorites">즐겨찾기</string>
+    <string name="action_delete">삭제</string>
+
+    <string name="label_part_of_speech">품사: %1$s</string>
+    <string name="label_definition_en">영문 뜻: %1$s</string>
+    <string name="label_definition_ko">한글 뜻: %1$s</string>
+    <string name="label_example">예문: %1$s</string>
+
+    <string name="msg_enter_word">검색할 단어를 입력해주세요.</string>
+    <string name="msg_not_found">\'%1$s\' 단어를 찾을 수 없습니다.</string>
+    <string name="msg_no_favorites">즐겨찾기한 단어가 없습니다.</string>
+    <string name="title_favorites">즐겨찾기</string>
+</resources>
