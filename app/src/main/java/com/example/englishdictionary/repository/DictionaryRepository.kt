@@ -1,8 +1,12 @@
 package com.example.englishdictionary.repository
 
 import android.util.Log
+<<<<<<< HEAD
 import com.example.englishdictionary.data.CacheDao
 import com.example.englishdictionary.data.CachedWord
+=======
+import com.example.englishdictionary.model.DictionaryEntry
+>>>>>>> a7afefab511e6bd94175d6d85e386c0e669d380f
 import com.example.englishdictionary.network.ApiClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -24,29 +28,6 @@ sealed class LookupResult {
 }
 
 class DictionaryRepository(private val cacheDao: CacheDao) {
-
-    suspend fun lookup(rawWord: String): LookupResult = withContext(Dispatchers.IO) {
-        val word = rawWord.trim().lowercase()
-        if (word.isEmpty()) return@withContext LookupResult.NotFound
-
-        // 1) 이미 찾아본 단어라면 캐시에서 바로 반환 (네트워크 호출 없이 즉시 표시)
-        cacheDao.get(word)?.let { cached ->
-            return@withContext LookupResult.Success(
-                word = cached.word,
-                phonetic = cached.phonetic,
-                partOfSpeech = cached.partOfSpeech,
-                definitionEn = cached.definitionEn,
-                example = cached.example,
-                koreanMeaning = cached.koreanMeaning
-            )
-        }
-
-        try {
-            val entries = ApiClient.dictionaryApi.getDefinition(word)
-            val entry = entries.firstOrNull() ?: return@withContext LookupResult.NotFound
-            val meaning = entry.meanings?.firstOrNull()
-            val definition = meaning?.definitions?.firstOrNull()
-            val definitionEn = definition?.definition ?: return@withContext LookupResult.NotFound
 
             val korean = try {
                 ApiClient.translationApi.translate(definitionEn).responseData?.translatedText
